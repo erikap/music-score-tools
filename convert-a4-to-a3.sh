@@ -12,8 +12,10 @@
 directory=`pwd`/**/*.pdf
 for file in $directory
 do
+  file_name=${file##*/} # only keep part after last '/'
+  echo $file_name
   pages=`pdfinfo $file | awk '/^Pages:/ {print $2}'`
-  pdfjam_options="--suffix a3 --paper a3paper --landscape --nup '2x1'"
+  pdfjam_options="--quiet --suffix a3 --paper a3paper --landscape --nup '2x1'"
   if [ $(($pages%2)) -eq 0 ]
   then
     # even number of pages
@@ -25,5 +27,3 @@ do
 
   eval "pdfjam "${pdfjam_options} ${file}""
 done
-
-#find `pwd` -type f -name "*.pdf" -print0 | xargs -0 -I {} echo "Processing {}"
